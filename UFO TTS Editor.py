@@ -7,7 +7,7 @@ byte_filename = "BYTE_LOCATIONS.ini"
 ufo_filename = "Ufo_sh2.exe"
 ufopaedia_filename = "entries.txt"
 settings = {"byte_location_file":"", "ufo_tts_exe":"", "ufopaedia_text":""}
-game_values = {} # {"GROUP_NAME":[[ADDRESS,VALUE,DEFAULT,"PARAMETER_NAME"],[]...]}
+game_values = {} # {"GROUP_NAME":[[ADDRESS,VALUE,DEFAULT,"PARAMETER_NAME","COMMENTS",LENGTH],[]...]}
 active_group = [False]
 
 #####################################################################
@@ -24,16 +24,20 @@ def load_locations():
 	with open(settings["byte_location_file"]) as file:
 		for line in file:
 			lines += 1
-			if line.count(" - ") == 3:
+			if line.count(" - ") == 4:
 				valid_lines += 1
 				data = line.rstrip("\n").split(" - ")
-				#line format is address - group name - parameter name - default value
+				#line format is address - number of bytes - group name - parameter name|comments - default value
 				try:
 					data[0] = int(data[0],16)
-					data[3] = int(data[3])
-					if not data[1] in game_values:
-						game_values[data[1]] = []
-					game_values[data[1]].append([data[0], -1, data[3], data[2]])
+					data[4] = int(data[4])
+					data[1] = int(data[1])
+					if not data[2] in game_values:
+						game_values[data[2]] = []
+					name = data[3].split("|")
+					if len(name) == 1:
+						name.append("")
+					game_values[data[2]].append([data[0], -1, data[4], name[0], name[1], data[1]])
 				except:
 					failed_reads+=1
 	return failed_reads
@@ -104,7 +108,7 @@ def patch_file(filename, array):
 		for entry in array:
 			try:
 				file.seek(entry[0], 0)
-				file.write(entry[1].to_bytes(4,'little'))
+				file.write(entry[1].to_bytes(entry[5],'little'))
 			except:
 				failed_writes.append(entry)
 	return failed_writes
@@ -122,7 +126,7 @@ def load_file(filename, array):
 		for entry in array:
 			try:
 				file.seek(entry[0], 0)
-				entry[1] = int.from_bytes(file.read(4),'little')
+				entry[1] = int.from_bytes(file.read(entry[5]),'little')
 			except:
 				failed_reads.append(entry)
 	return failed_reads
@@ -138,7 +142,7 @@ def set_to_default():
 #####################################################################
 
 initialize_settings()
-load_locations()
+print(load_locations())
 try:
 	load_values()
 except:
@@ -179,7 +183,8 @@ def display_values(list):
 				app.addNumericEntry(values[3])
 				app.setEntry(values[3], "{}".format(values[1]), callFunction = False)
 				app.setEntryChangeFunction(values[3],update_values)
-				#app.addLabel("Default is {}".format(values[2]))
+				if values[4]:
+					app.addLabel(values[4])
 		app.stopScrollPane()
 
 with gui("UFO TTS Editor Beta") as app:

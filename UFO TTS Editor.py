@@ -443,6 +443,8 @@ def settings_buttons(btn):
 			else:
 				settings["byte_location_file"] = byte_filepath
 				load_locations()
+				app.clearListBox("GroupList")
+				app.updateListBox("GroupList", exe_values, select = True, callFunction = True)
 				changes = True
 		exe_filepath = app.getEntry("ufo_tts_exe")
 		if exe_filepath != settings["ufo_tts_exe"]:
@@ -450,12 +452,12 @@ def settings_buttons(btn):
 				print("Invalid ufo tts filepath!")
 			elif verify_exe(exe_filepath):
 				settings["ufo_tts_exe"] = exe_filepath
-				new_values.clear()
-				load_from_exe()
 				changes = True
 			else:
 				print("EXE isn't compatible")
 		if changes:
+			new_values.clear()
+			load_from_exe()
 			display_values("GroupList")
 			save_settings()
 	app.hideSubWindow("Settings")
@@ -470,9 +472,9 @@ with gui("UFO TTS Editor v1.0") as app:
 	app.setStretch("both")
 	with app.panedFrame("Left"):
 		with app.labelFrame("Groups", label = "Select an item to edit", sticky = "news"):
-				app.addListBox("GroupList",exe_values)
-				app.setListBoxGroup("GroupList",group=True)
-				app.setListBoxChangeFunction("GroupList",display_values)
+			app.addListBox("GroupList",exe_values)
+			app.setListBoxGroup("GroupList",group=True)
+			app.setListBoxChangeFunction("GroupList",display_values)
 		with app.panedFrame("Right"):
 			with app.scrollPane("Values"):
 				app.addLabel(" ")

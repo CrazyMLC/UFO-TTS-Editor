@@ -1,0 +1,38 @@
+Every byte in the EXE has its own address.
+Some of these bytes are used by the game to determine how much damage a weapon does, how much it costs, etc.
+
+You can find byte locations in BYTE_LOCATIONS.ini
+
+The format for each line in the ini is as follows:
+Address - Group Name - Attribute Name - Default Value
+To be clear, the names are not within the file itself, but provided for convenience.
+
+When you want to edit one of these attributes, you have to open up your hex editor and jump to the byte location.
+Typically this jumping feature will be under the Edit or Search dropdowns.
+If you happen to be using it, in MadEdit, the keyboard shortcut is Ctrl-Shift-G
+From there, you should know two things:
+	1: Integers are made up of four bytes
+	2: The integers in this EXE are little-endian (the most-significant byte is at the end)
+	
+For example, say I wanted to increase the perception of the Sectoid to 400.
+First, I would go to the byte location listed in BYTE_LOCATIONS.ini for the Sectoid's Perception, 0x00122d75
+There, I would see either "7B 00 00 00" for the patched EXE, or "76 00 00 00" for the original. Let's say I'm using the patched EXE, so I see "7B 00 00 00".
+Now that I know I'm in the right place, I can look up what 400 is in hexadecimal, which is as simple as typing "400 in hex" into google.
+The answer is 0x190. But wait! You can't just type that number into the byte location.
+Remember what I said about it being little-endian? There's a reason there's three pairs of 00s after our 76/7B.
+
+The result we get from google is big-endian, so with all the 0s added back in, it'd look like 0x0000007b.
+The bytes are actually flipped around in the EXE from how you'd normally read them!
+
+So, we want to change the Sectoid's perception to 400. What do we type in?
+Let's expand that 0x190 out.
+"00 00 01 90"
+What we do is we reverse the order of these bytes. The last byte should swapped with the first, and the third swapped with the second.
+
+The result should be: "90 01 00 00"
+This is what we type into the byte location, replacing the "7B 00 00 00"
+
+Now, when you start up the game, any new Sectoids that spawn will have 400 perception, or a bit more if they're a Navigator.
+Note that I said new Sectoids. If you load a save from the battlescape, any units there have already spawned, and have their stats stored in the save game. You won't see your changes reflected there, so you'll have to start a new battlescape combat.
+
+And that's how you edit the bytes in UFO TTS. Good luck, and stay patient.

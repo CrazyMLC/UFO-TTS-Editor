@@ -370,7 +370,7 @@ def update_values(name):
 					app.setEntryBg(name, "white")
 				else:
 					new_values[address] = [active_group, int(value)]
-					app.setEntryBg(name, "yellow")
+					app.setEntryBg(name, "light yellow")
 		update_listbox_colors("GroupList")
 
 def display_values(list):
@@ -394,7 +394,7 @@ def display_values(list):
 				app.addNumericEntry(entry.name)
 				if address in new_values:
 					val = new_values[address][1]
-					app.setEntryBg(entry.name, "yellow")
+					app.setEntryBg(entry.name, "light yellow")
 				else:
 					val = entry.value
 					app.setEntryBg(entry.name, "white")
@@ -410,12 +410,12 @@ def update_listbox_colors(list):
 	items = app.getAllListItems(list)
 	for item in items:
 		if item in changed_groups:
-			app.setListItemBg(list,item,"yellow")
+			app.setListItemBg(list,item,"light yellow")
 		else:
 			app.setListItemBg(list,item,"white")
 	if changed_groups:
 		app.setStatusbar("{} groups with unsaved changes.".format(len(changed_groups)),0)
-		app.setStatusbarBg("yellow",0)
+		app.setStatusbarBg("light yellow",0)
 	else:
 		app.setStatusbar("No groups with unsaved changes.",0)
 		app.setStatusbarBg("white",0)
@@ -425,7 +425,7 @@ def settings_window_change(set):
 	for setting in ["byte_location_file", "ufo_tts_exe"]:
 		if app.getEntry(setting) != settings[setting]:
 			disable = False
-			app.setEntryBg(setting, "yellow")
+			app.setEntryBg(setting, "light yellow")
 		else:
 			app.setEntryBg(setting, "white")
 	if disable:

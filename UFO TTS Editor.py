@@ -361,17 +361,20 @@ def toolbar_manager(toolbar):
 def update_values(name):
 	global active_group
 	value = app.getEntry(name)
-	if value:
-		for address in exe_values[active_group]:
-			entry = exe_values[active_group][address]
-			if entry.name == name:
-				if int(value) == entry.value:
-					new_values.pop(address, None)
-					app.setEntryBg(name, "white")
-				else:
-					new_values[address] = [active_group, int(value)]
-					app.setEntryBg(name, "light yellow")
-		update_listbox_colors("GroupList")
+	try:
+		if value >= 0:
+			for address in exe_values[active_group]:
+				entry = exe_values[active_group][address]
+				if entry.name == name:
+					if int(value) == entry.value:
+						new_values.pop(address, None)
+						app.setEntryBg(name, "white")
+					else:
+						new_values[address] = [active_group, int(value)]
+						app.setEntryBg(name, "light yellow")
+			update_listbox_colors("GroupList")
+	except TypeError:
+		pass
 
 def display_values(list):
 	global active_group
@@ -462,7 +465,7 @@ def settings_buttons(btn):
 			save_settings()
 	app.hideSubWindow("Settings")
 
-with gui("UFO TTS Editor v1.0") as app:
+with gui("UFO TTS Editor v"+version) as app:
 	app.setIcon("Ico.ico")
 	app.setSize(640,480)
 	app.setStopFunction(check_stop)

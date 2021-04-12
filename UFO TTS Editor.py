@@ -11,7 +11,7 @@ settings = {"byte_location_file":"", "ufo_tts_exe":"", "ufopaedia_text":""}
 exe_values = {}#{"GROUP_NAME":{ADDRESS:class Value, ADDRESS:class Value,...{}
 new_values = {}#{ADDRESS:["GROUP_NAME",VALUE],...}
 active_group = False
-version = "1.0"
+version = "0.8"
 
 
 def safeInt(string, base, error):

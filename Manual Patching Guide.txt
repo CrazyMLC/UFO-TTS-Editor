@@ -4,7 +4,7 @@ Some of these bytes are used by the game to determine how much damage a weapon d
 You can find byte locations in BYTE_LOCATIONS.ini
 
 The format for each line in the ini is as follows:
-Address - Group Name - Attribute Name - Default Value
+Address - Number of Bytes - Group Name - Attribute Name - Default Value
 To be clear, the names are not within the file itself, but provided for convenience.
 
 When you want to edit one of these attributes, you have to open up your hex editor and jump to the byte location.
